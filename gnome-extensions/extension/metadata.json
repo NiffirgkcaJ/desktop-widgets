@@ -1,0 +1,15 @@
+{
+    "description": "A modular widget system for your desktop. Place and customize various widgets on your background to enhance your workspace.\n\nExtension Homepage:\nhttps://github.com/NiffirgkcaJ/desktop-widgets\nhttps://gitlab.com/NiffirgkcaJ/desktop-widgets",
+    "name": "Desktop Widgets",
+    "shell-version": [
+        "46",
+        "47",
+        "48",
+        "49"
+    ],
+    "url": "https://github.com/NiffirgkcaJ/desktop-widgets",
+    "uuid": "desktop-widgets@NiffirgkcaJ.github.com",
+    "version": 1,
+    "settings-schema": "org.gnome.shell.extensions.desktop-widgets",
+    "textdomain": "desktop-widgets"
+}

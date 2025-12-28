@@ -1,0 +1,8 @@
+/* DateTime widget styling */
+.datetime-widget-container {
+    border-radius: inherit;
+}
+
+.datetime-widget-label {
+    font-size: inherit;
+}

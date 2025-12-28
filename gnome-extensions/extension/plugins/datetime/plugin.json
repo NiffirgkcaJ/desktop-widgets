@@ -1,0 +1,6 @@
+{
+    "id": "datetime",
+    "name": "Date & Time",
+    "description": "A simple clock widget",
+    "anchor": "center"
+}

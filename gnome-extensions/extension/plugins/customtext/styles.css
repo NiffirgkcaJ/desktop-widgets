@@ -1,0 +1,8 @@
+/* Custom Text widget styling */
+.customtext-widget-container {
+    border-radius: inherit;
+}
+
+.customtext-widget-label {
+    font-size: inherit;
+}

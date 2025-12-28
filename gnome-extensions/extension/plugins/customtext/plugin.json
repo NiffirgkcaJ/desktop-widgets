@@ -1,0 +1,6 @@
+{
+    "id": "customtext",
+    "name": "Custom Text",
+    "description": "Display custom text on the desktop",
+    "anchor": "center"
+}

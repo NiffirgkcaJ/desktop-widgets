@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="desktop-widgets">
+    <schema id="org.gnome.shell.extensions.desktop-widgets" path="/org/gnome/shell/extensions/desktop-widgets/">
+        <key name="profiles-json" type="s">
+            <default>'{ "activeProfileId": "default", "profiles": { "default": { "name": "Default", "widgets": [] } } }'</default>
+            <summary>Profiles JSON</summary>
+            <description>Stores all profiles and widget configurations.</description>
+        </key>
+    </schema>
+</schemalist>
