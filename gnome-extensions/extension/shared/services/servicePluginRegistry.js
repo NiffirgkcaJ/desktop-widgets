@@ -1,5 +1,9 @@
 import Gio from 'gi://Gio';
 
+import { importInShellOnly } from '../utilities/utilityProcessContext.js';
+
+const St = await importInShellOnly('gi://St');
+
 /**
  * PluginRegistry
  * @class
@@ -71,8 +75,9 @@ export class PluginRegistry {
      * Load CSS stylesheets for all registered plugins
      */
     async loadStyles() {
+        if (!St) return;
+
         try {
-            const St = (await import('gi://St')).default;
             const theme = St.ThemeContext.get_for_stage(global.stage).get_theme();
             for (const [id, plugin] of this._plugins) {
                 if (plugin.stylesPath.query_exists(null)) {
@@ -139,18 +144,11 @@ export class PluginRegistry {
      * Clean up and unload all plugin resources
      */
     destroy() {
-        if (this._cssTokens.size > 0) {
-            import('gi://St')
-                .then((module) => {
-                    const St = module.default;
-                    if (global.stage) {
-                        const theme = St.ThemeContext.get_for_stage(global.stage).get_theme();
-                        for (const stylesheet of this._cssTokens.values()) {
-                            theme.unload_stylesheet(stylesheet);
-                        }
-                    }
-                })
-                .catch(() => {});
+        if (this._cssTokens.size > 0 && St && global.stage) {
+            const theme = St.ThemeContext.get_for_stage(global.stage).get_theme();
+            for (const stylesheet of this._cssTokens.values()) {
+                theme.unload_stylesheet(stylesheet);
+            }
         }
         this._plugins.clear();
         this._cssTokens.clear();

@@ -192,5 +192,9 @@ export default class DesktopWidgetsExtension extends Extension {
             this._pluginRegistry.destroy();
             this._pluginRegistry = null;
         }
+        if (this._configManager) {
+            this._configManager.destroy();
+            this._configManager = null;
+        }
     }
 }

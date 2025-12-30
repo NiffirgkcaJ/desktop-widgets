@@ -42,13 +42,6 @@ const DateTimeWidget = GObject.registerClass(
 
             this._updateTime();
             this._startTimer();
-
-            this.connect('destroy', () => {
-                if (this._timeoutId) {
-                    GLib.source_remove(this._timeoutId);
-                    this._timeoutId = null;
-                }
-            });
         }
 
         /**
@@ -69,6 +62,17 @@ const DateTimeWidget = GObject.registerClass(
          */
         _updateTime() {
             this._label.text = formatDateTime(this._format);
+        }
+
+        /**
+         * Destroy the widget and clean up timer
+         */
+        destroy() {
+            if (this._timeoutId) {
+                GLib.source_remove(this._timeoutId);
+                this._timeoutId = null;
+            }
+            super.destroy();
         }
     },
 );
