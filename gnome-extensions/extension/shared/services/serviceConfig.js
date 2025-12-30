@@ -41,7 +41,7 @@ export class ConfigManager {
         this._signals = new Map();
         this._nextSignalId = 1;
 
-        this._settings.connect(`changed::${KeyProfiles}`, () => {
+        this._settingsChangedId = this._settings.connect(`changed::${KeyProfiles}`, () => {
             this._cache = null;
             this.emit('profiles-changed');
         });
@@ -432,5 +432,17 @@ export class ConfigManager {
                 }
             }
         }
+    }
+
+    /**
+     * Clean up resources
+     */
+    destroy() {
+        if (this._settingsChangedId) {
+            this._settings.disconnect(this._settingsChangedId);
+            this._settingsChangedId = null;
+        }
+        this._signals.clear();
+        this._cache = null;
     }
 }
