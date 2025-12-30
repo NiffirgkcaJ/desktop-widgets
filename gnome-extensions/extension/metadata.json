@@ -9,7 +9,7 @@
     ],
     "url": "https://github.com/NiffirgkcaJ/desktop-widgets",
     "uuid": "desktop-widgets@NiffirgkcaJ.github.com",
-    "version": 2,
+    "version": 3,
     "settings-schema": "org.gnome.shell.extensions.desktop-widgets",
     "textdomain": "desktop-widgets"
 }
