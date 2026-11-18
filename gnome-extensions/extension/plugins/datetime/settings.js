@@ -3,7 +3,7 @@ import GLib from 'gi://GLib';
 import Gtk from 'gi://Gtk';
 
 import { buildBaseStyleSettings } from '../../shared/settings/settingsBaseStyle.js';
-import { FormatPresets, formatDateTime } from '../../shared/utilities/utilityDateFormat.js';
+import { FormatPresets, formatDateTime, withEnglishNames } from '../../shared/utilities/utilityDateFormat.js';
 import { truncateLines, TextDefaults } from '../../shared/utilities/utilityText.js';
 
 const DEFAULT_FORMAT = 'HH:mm:ss';
@@ -59,13 +59,25 @@ export function buildSettings(config, onConfigChange) {
     presetRow.add_suffix(presetDropdown);
     formatGroup.add(presetRow);
 
+    // English day/month names regardless of the system locale
+    let englishNames = config.englishNames === true;
+    const englishRow = new Adw.ActionRow({
+        title: 'English Names',
+        subtitle: 'Day and month names in English',
+    });
+    const englishSwitch = new Gtk.Switch({ active: englishNames, valign: Gtk.Align.CENTER });
+    englishRow.add_suffix(englishSwitch);
+    englishRow.set_activatable_widget(englishSwitch);
+    formatGroup.add(englishRow);
+    const renderFormat = (format) => formatDateTime(englishNames ? withEnglishNames(format) : format);
+
     // Live preview
     const previewRow = new Adw.ActionRow({
         title: 'Preview',
         subtitle: 'Current time in selected format',
     });
     const previewLabel = new Gtk.Label({
-        label: truncateLines(formatDateTime(currentFormat)),
+        label: truncateLines(renderFormat(currentFormat)),
         valign: Gtk.Align.CENTER,
         css_classes: ['dim-label'],
         max_width_chars: TextDefaults.PREVIEW_MAX_CHARS,
@@ -75,7 +87,7 @@ export function buildSettings(config, onConfigChange) {
 
     // Update preview periodically
     const updatePreview = () => {
-        previewLabel.label = truncateLines(formatDateTime(formatEntry.text || DEFAULT_FORMAT));
+        previewLabel.label = truncateLines(renderFormat(formatEntry.text || DEFAULT_FORMAT));
         return GLib.SOURCE_CONTINUE;
     };
     const previewTimeoutId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, PREVIEW_INTERVAL_SECONDS, updatePreview);
@@ -83,6 +95,12 @@ export function buildSettings(config, onConfigChange) {
     // Clean up timer when widget is destroyed
     previewLabel.connect('destroy', () => {
         if (previewTimeoutId) GLib.source_remove(previewTimeoutId);
+    });
+
+    englishSwitch.connect('notify::active', () => {
+        englishNames = englishSwitch.active;
+        onConfigChange('englishNames', englishNames);
+        updatePreview();
     });
 
     // Guard flag to prevent circular updates between entry and dropdown

@@ -3,7 +3,7 @@ import GLib from 'gi://GLib';
 import GObject from 'gi://GObject';
 import St from 'gi://St';
 
-import { formatDateTime, hasSecondTokens } from '../../shared/utilities/utilityDateFormat.js';
+import { formatDateTime, hasSecondTokens, withEnglishNames } from '../../shared/utilities/utilityDateFormat.js';
 
 const DEFAULT_FORMAT = 'HH:mm:ss';
 const LOADING_TEXT = 'Loading...';
@@ -61,7 +61,8 @@ const DateTimeWidget = GObject.registerClass(
          * @private
          */
         _updateTime() {
-            this._label.text = formatDateTime(this._format);
+            const format = this._config.englishNames ? withEnglishNames(this._format) : this._format;
+            this._label.text = formatDateTime(format);
         }
 
         /**
