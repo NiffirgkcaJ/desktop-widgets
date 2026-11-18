@@ -238,3 +238,21 @@ export function hasSecondTokens(luxonFormat) {
     if (luxonFormat.includes('u')) return true;
     return false;
 }
+
+// English day/month names regardless of the system's LC_TIME
+const EN_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const EN_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const NAME_TOKENS = /EEEE|cccc|EEE|ccc|MMMM|LLLL|MMM|LLL/g;
+
+/**
+ * Replace day/month name tokens with quoted English names for the current date
+ * @param {string} format - Luxon-style format string
+ * @returns {string} Format string with English names as literals
+ */
+export function withEnglishNames(format) {
+    const now = GLib.DateTime.new_now_local();
+    const day = EN_DAYS[now.get_day_of_week() - 1];
+    const month = EN_MONTHS[now.get_month() - 1];
+    const names = { EEEE: day, cccc: day, EEE: day.slice(0, 3), ccc: day.slice(0, 3), MMMM: month, LLLL: month, MMM: month.slice(0, 3), LLL: month.slice(0, 3) };
+    return format.replace(NAME_TOKENS, (token) => `'${names[token]}'`);
+}
