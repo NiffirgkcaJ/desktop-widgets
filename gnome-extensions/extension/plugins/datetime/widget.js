@@ -7,8 +7,10 @@ import { formatDateTime, hasSecondTokens } from '../../shared/utilities/utilityD
 
 const DEFAULT_FORMAT = 'HH:mm:ss';
 const LOADING_TEXT = 'Loading...';
-const TIMER_INTERVAL_SECONDS = 1;
-const TIMER_INTERVAL_MINUTES = 60;
+const TICK_SECOND_MS = 1000;
+const TICK_MINUTE_MS = 60 * 1000;
+// Fire slightly after the boundary so the formatted time has already changed
+const TICK_SLACK_MS = 20;
 const ELLIPSIZE_NONE = 0;
 
 // Container widget that supports background and border styling
@@ -49,10 +51,14 @@ const DateTimeWidget = GObject.registerClass(
          * @private
          */
         _startTimer() {
-            const interval = hasSecondTokens(this._format) ? TIMER_INTERVAL_SECONDS : TIMER_INTERVAL_MINUTES;
-            this._timeoutId = GLib.timeout_add_seconds(GLib.PRIORITY_DEFAULT, interval, () => {
+            // Schedule each tick for the next full second/minute instead of a fixed interval
+            // from enable(), otherwise a minute-only clock can lag behind by up to 59 seconds.
+            const tickMs = hasSecondTokens(this._format) ? TICK_SECOND_MS : TICK_MINUTE_MS;
+            const delay = tickMs - (Date.now() % tickMs) + TICK_SLACK_MS;
+            this._timeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, delay, () => {
                 this._updateTime();
-                return GLib.SOURCE_CONTINUE;
+                this._startTimer();
+                return GLib.SOURCE_REMOVE;
             });
         }
 
