@@ -62,6 +62,10 @@ const DateTimeWidget = GObject.registerClass(
          */
         _updateTime() {
             this._label.text = formatDateTime(this._format);
+            // St.Label paints the text-shadow, but when the new text keeps the same
+            // size ClutterText only damages its own box, leaving stale shadow pixels
+            // outside it. Redraw the label so its paint volume (incl. shadow) is cleared.
+            this._label.queue_redraw();
         }
 
         /**
