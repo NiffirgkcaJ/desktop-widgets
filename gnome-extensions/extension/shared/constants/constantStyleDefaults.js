@@ -6,6 +6,7 @@ export const DefaultStyle = {
     fontFamily: null,
     fontSize: 32,
     fontWeight: 'bold',
+    fontStyle: 'normal',
     letterSpacing: 0,
     textAlign: 'center',
 

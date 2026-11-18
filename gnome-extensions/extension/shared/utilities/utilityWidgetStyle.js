@@ -89,6 +89,7 @@ export function buildTextCSS(style) {
     if (s.fontFamily) rules.push(`font-family: "${s.fontFamily}"`);
     if (s.fontSize) rules.push(`font-size: ${s.fontSize}px`);
     if (s.fontWeight) rules.push(`font-weight: ${s.fontWeight}`);
+    if (s.fontStyle && s.fontStyle !== 'normal') rules.push(`font-style: ${s.fontStyle}`);
     if (s.fontColor) {
         const colorValue = s.fontOpacity < 1 ? colorToRgba(s.fontColor, s.fontOpacity) : s.fontColor;
         rules.push(`color: ${colorValue}`);

@@ -201,6 +201,15 @@ function buildFontSettings(group, style, onStyleChange) {
     fontWeightRow.add_suffix(fontWeightCombo);
     group.add(fontWeightRow);
 
+    const italicRow = new Adw.ActionRow({ title: 'Italic' });
+    const italicSwitch = new Gtk.Switch({ active: getStyleValue(style, 'fontStyle') === 'italic', valign: Gtk.Align.CENTER });
+    italicSwitch.connect('notify::active', () => {
+        onStyleChange('fontStyle', italicSwitch.active ? 'italic' : 'normal');
+    });
+    italicRow.add_suffix(italicSwitch);
+    italicRow.set_activatable_widget(italicSwitch);
+    group.add(italicRow);
+
     group.add(createSpinRow('Letter Spacing', 'letterSpacing', style, onStyleChange, { lower: LETTER_SPACING_LOWER, upper: LETTER_SPACING_UPPER }));
 
     const textAlignRow = new Adw.ActionRow({ title: 'Text Align' });
